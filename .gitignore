@@ -18,7 +18,7 @@ cover/
 *.so
 venv/
 .venv/
-demo.*
+demo
 .coverage
 coverage.xml
 tests/demo.*

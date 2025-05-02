@@ -67,7 +67,7 @@ class ImageCaptcha:
         self._font_sizes = font_sizes or (42, 50, 56)
         self._truefonts: list[FreeTypeFont] = []
         # 改动说明：添加类别表
-        self._class_type = class_type
+        self._class_type = [] if class_type is None else class_type
         self._auto_add_class = auto_add_class
 
     @property
@@ -234,11 +234,11 @@ class ImageCaptcha:
         if width > self._width:
             image = image.resize((self._width, self._height))
             for i in range(len(images)):
-                bbox_info[i].update({"char_bbox_in_pic": {
-                    "x_min": int(bbox_info[i]["char_bbox_in_pic"]["x_min"] * self._width / width),
-                    "x_max": int(bbox_info[i]["char_bbox_in_pic"]["x_max"] * self._width / width)
-                    # 高没有变化
-                }})
+                bbox_info[i]["char_bbox_in_pic"]["x_min"] = int(
+                    bbox_info[i]["char_bbox_in_pic"]["x_min"] * self._width / width)
+                bbox_info[i]["char_bbox_in_pic"]["x_max"] = int(
+                    bbox_info[i]["char_bbox_in_pic"]["x_max"] * self._width / width)
+                # 高没有变化
 
         return image, bbox_info
 
@@ -324,15 +324,15 @@ class ImageCaptcha:
         label_info = self.label_bbox(self._class_type, bbox_info)
         for char in label_info:
             label = label + str(char[0])\
-                    + "" + str(char[1][0]) + "" + str(char[1][1])\
-                    + "" + str(char[2][0]) + "" + str(char[2][1])\
+                    + " " + str(char[1][0]) + " " + str(char[1][1])\
+                    + " " + str(char[2][0]) + " " + str(char[2][1])\
                     + "\n"
         with open(pic_path_name + ".txt", "w") as txt:
             txt.write(label)
 
     def write_class(self, output: str) -> None:
-        class_info = "".join(self._class_type)
-        with open(output) as txt:
+        class_info = "\n".join(self._class_type)
+        with open(output, "w") as txt:
             txt.write(class_info)
             print("Class info is saved to:{0}".format(output))
 
