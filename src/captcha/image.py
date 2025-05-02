@@ -288,8 +288,9 @@ class ImageCaptcha:
                 class_type = class_list.index(char)
                 center = [(bbox["char_bbox_in_pic"]["x_min"] + bbox["char_bbox_in_pic"]["x_max"]) / 2 / self._width,
                           (bbox["char_bbox_in_pic"]["y_min"] + bbox["char_bbox_in_pic"]["y_max"]) / 2 / self._height]
-                size = [(bbox["char_bbox_in_pic"]["x_max"] - bbox["char_bbox_in_pic"]["x_min"]) / self._width,
-                        (bbox["char_bbox_in_pic"]["y_max"] - bbox["char_bbox_in_pic"]["y_min"]) / self._height]
+                size = [abs((bbox["char_bbox_in_pic"]["x_max"] - bbox["char_bbox_in_pic"]["x_min"]) / self._width),
+                        abs((bbox["char_bbox_in_pic"]["y_max"] - bbox["char_bbox_in_pic"]["y_min"]) / self._height)]
+                # abs以防高弄反了
                 label.append([class_type, center, size])
         return label
 
@@ -323,7 +324,7 @@ class ImageCaptcha:
         """
         im, bbox_info = self.generate_image(chars, bg_color=bg_color, fg_color=fg_color)
         im.save(output, format=format)
-        print("Captcha pic is saved to:{0}".format(output))
+        # print("Captcha pic is saved to:{0}".format(output))
 
         # 改动说明：path部分
         pic_path_name, _ = os.path.splitext(output)
@@ -336,6 +337,7 @@ class ImageCaptcha:
                     + "\n"
         with open(pic_path_name + ".txt", "w") as txt:
             txt.write(label)
+            # print("Captcha label is saved to:{0}".format(pic_path_name + ".txt"))
 
     def write_class(self, output: str) -> None:
         class_info = "\n".join(self._class_type)
