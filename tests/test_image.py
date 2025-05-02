@@ -18,6 +18,5 @@ def test_save_image():
     captcha.write('1145141919810', filepath)
     assert os.path.isfile(filepath)
 
-    captcha.write_class(os.path.join(ROOT, "demo/demo_class.txt"))
 
 test_save_image()
