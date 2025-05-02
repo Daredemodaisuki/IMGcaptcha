@@ -154,10 +154,17 @@ class ImageCaptcha:
         # 改动说明：transform(_, Transform.QUAD, data)方法对图像进行四边形变换，将图像的四边形区域映射到另一个四边形区域
         # 所以可以通过data的四至给出最终单个字符在img的bbox
         im = im.transform((int(w), int(h)), Transform.QUAD, data)
-        bbox = {"x_min": min(x1, -x1, int(w2) + x2, int(w2) - x2),
-                "x_max": max(x1, -x1, int(w2) + x2, int(w2) - x2),
-                "y_min": min(y1, int(h2) - y2, int(h2) + y2, -y1),  # 下界？
-                "y_max": max(y1, int(h2) - y2, int(h2) + y2, -y1)}
+        if c != " ":
+            l, u, r, b = im.getbbox()
+            bbox = {"x_min": l,
+                    "x_max": r,
+                    "y_min": b,
+                    "y_max": u}
+        else:
+            bbox = {"x_min": min(x1, -x1, int(w2) + x2, int(w2) - x2),
+                    "x_max": max(x1, -x1, int(w2) + x2, int(w2) - x2),
+                    "y_min": min(y1, int(h2) - y2, int(h2) + y2, -y1),  # 下界
+                    "y_max": max(y1, int(h2) - y2, int(h2) + y2, -y1)}
         return im, bbox
 
     def create_captcha_image(

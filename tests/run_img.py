@@ -2,7 +2,7 @@ from src.captcha.image import ImageCaptcha
 
 import random
 import time
-import os, sys, ast
+import os
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
 NUMBER = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
