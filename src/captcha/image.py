@@ -58,12 +58,17 @@ class ImageCaptcha:
             width: int = 160,
             height: int = 60,
             fonts: list[str] | None = None,
-            font_sizes: tuple[int, ...] | None = None):
+            font_sizes: tuple[int, ...] | None = None,
+            class_type: list[str] | None = None,
+            auto_add_class: bool = True):
         self._width = width
         self._height = height
         self._fonts = fonts or DEFAULT_FONTS
         self._font_sizes = font_sizes or (42, 50, 56)
         self._truefonts: list[FreeTypeFont] = []
+        # 改动说明：添加类别表
+        self._class_type = class_type
+        self._auto_add_class = auto_add_class
 
     @property
     def truefonts(self) -> list[FreeTypeFont]:
@@ -246,6 +251,12 @@ class ImageCaptcha:
         :param bg_color: background color of the image in rgb format (r, g, b).
         :param fg_color: foreground color of the text in rgba format (r,g,b,a).
         """
+        # 改动说明：判断字符是否在类别表内，不在则添加
+        if self._auto_add_class:
+            for char in chars:
+                if char not in self._class_type:
+                    self._class_type.append(char)
+
         background = bg_color if bg_color else random_color(238, 255)
         random_fg_color = random_color(10, 200, secrets.randbelow(36) + 220)
         color: ColorTuple = fg_color if fg_color else random_fg_color
@@ -309,9 +320,8 @@ class ImageCaptcha:
 
         # 改动说明：path部分
         pic_path_name, _ = os.path.splitext(output)
-        class_list = []
         label: str = ""
-        label_info = self.label_bbox(class_list, bbox_info)
+        label_info = self.label_bbox(self._class_type, bbox_info)
         for char in label_info:
             label = label + str(char[0])\
                     + "" + str(char[1][0]) + "" + str(char[1][1])\
