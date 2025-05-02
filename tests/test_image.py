@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import os
-from captcha.image import ImageCaptcha
+from src.captcha.image import ImageCaptcha
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,3 +17,5 @@ def test_save_image():
     filepath = os.path.join(ROOT, 'demo.png')
     captcha.write('1234', filepath)
     assert os.path.isfile(filepath)
+
+test_save_image()

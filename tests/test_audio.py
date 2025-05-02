@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import os
-from captcha.audio import AudioCaptcha
+from src.captcha.audio import AudioCaptcha
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
 
