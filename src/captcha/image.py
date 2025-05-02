@@ -315,12 +315,12 @@ class ImageCaptcha:
         :param fg_color: foreground color of the text in rgba format (r,g,b,a).
         """
         im, bbox_info = self.generate_image(chars, bg_color=bg_color, fg_color=fg_color)
-        print("Save to:{0}".format(output))
         im.save(output, format=format)
+        print("Captcha pic is saved to:{0}".format(output))
 
         # 改动说明：path部分
         pic_path_name, _ = os.path.splitext(output)
-        label: str = ""
+        label = ""
         label_info = self.label_bbox(self._class_type, bbox_info)
         for char in label_info:
             label = label + str(char[0])\
@@ -329,6 +329,12 @@ class ImageCaptcha:
                     + "\n"
         with open(pic_path_name + ".txt", "w") as txt:
             txt.write(label)
+
+    def write_class(self, output: str) -> None:
+        class_info = "".join(self._class_type)
+        with open(output) as txt:
+            txt.write(class_info)
+            print("Class info is saved to:{0}".format(output))
 
 
 def random_color(
